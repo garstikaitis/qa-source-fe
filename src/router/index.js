@@ -6,6 +6,7 @@ import Projects from '@/views/Projects.vue';
 import NewListing from '@/views/NewListing.vue';
 import Companies from '@/views/Companies.vue';
 import Register from '@/views/Register.vue';
+import Tasks from '@/views/Tasks.vue';
 
 Vue.use(VueRouter)
 
@@ -39,7 +40,12 @@ const routes = [
     path: '/listings/new',
     name: 'NewListing',
     component: NewListing,
-  }
+  },
+  {
+    path: '/tasks',
+    name: 'Tasks',
+    component: Tasks,
+  },
 ]
 
 const router = new VueRouter({

@@ -1,7 +1,7 @@
 <template>
 	<div class="fixed top-0 bg-white w-screen p-5 flex" style="left: 3.7rem;">
-		<div class="w-4/5">
-			<input class="search-input" placeholder="Search your books" />
+		<div class="w-4/5 flex items-center">
+			<i class="el-icon-search mr-2"></i><input class="search-input" placeholder="Search your projects.." />
 		</div>
 		<div class="w-1/5 flex justify-end mr-16 cursor-pointer items-center" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
 			<div class="bg-blue-500 px-3 py-1 rounded-full text-white font-bold mr-2 relative" v-if="user.is_admin">A</div>
@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 import { AuthService } from '@/api';
 export default {
 	name: 'top-navigation',
@@ -33,11 +33,7 @@ export default {
 		}
 	},
 	methods: {
-		async logout() {
-			const service = new AuthService;
-			const { data } = await service.logout();
-			if(data.success) this.$router.push({ name: 'Login' });
-		}
+		...mapActions('auth', ['logout'])
 	}
 }
 </script>

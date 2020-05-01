@@ -24,4 +24,8 @@ $--color-secondary: #6BC83D;
     }
   }
 }
+.el-loading-spinner {
+  display: flex;
+  justify-content: center;
+}
 </style>

@@ -1,5 +1,6 @@
-import axios from 'axios';
+import '@/utils/axios';
 import Cookies from 'js-cookie';
+import axios from 'axios';
 
 class AuthService {
 	async register({ email, password }) {

@@ -12,7 +12,13 @@
 				<i class="el-icon-picture-outline-round text-4xl"  :class="{ activeIcon: $route.name === 'Projects' }"></i>
 			</div>
 		</router-link>
-		<router-link :to="{ name: 'Companies' }">
+		<router-link :to="{ name: 'Tasks' }">
+			<div class="mb-6 relative">
+				<div v-if="$route.name === 'Tasks'" class="activeIndicator"></div>
+				<i class="el-icon-edit text-4xl"  :class="{ activeIcon: $route.name === 'Tasks' }"></i>
+			</div>
+		</router-link>
+		<router-link v-if="auth.user.role === 'admin'" :to="{ name: 'Companies' }">
 			<div class="mb-6 relative">
 				<div v-if="$route.name === 'Companies'" class="activeIndicator"></div>
 				<i class="el-icon-phone-outline text-4xl"  :class="{ activeIcon: $route.name === 'Companies' }"></i>
@@ -28,8 +34,14 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 export default {
 	name: 'side-navigation',
+	computed: {
+		...mapState({
+			auth: state => state.auth
+		})
+	},
 	mounted() {
 		console.log(this.$route);
 	}

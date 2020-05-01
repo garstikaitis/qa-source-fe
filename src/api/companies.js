@@ -1,3 +1,4 @@
+import '@/utils/axios';
 import axios from 'axios';
 
 class CompaniesService {
@@ -7,6 +8,10 @@ class CompaniesService {
 	}
 	async createCompany(input) {
 		const { data } = await axios.post('/companies/create', { ...input });
+		return data;
+	}
+	async addUserToCompany({ companyId, userId }) {
+		const { data } = await axios.post('/companies/add-user', { companyId, userId });
 		return data;
 	}
 }

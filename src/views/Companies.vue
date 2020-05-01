@@ -1,11 +1,11 @@
 <template>
 	<page title="Companies">
-		<el-button type="primary" slot="top-button" icon="el-icon-plus" @click="showAddCompanyModal = true" circle />
+		<el-button type="primary" slot="top-button" icon="el-icon-plus" @click="showAddCompanyModal = true">Add company</el-button>
 		<el-table
 			ref="multipleTable"
-			:data="tableData.data"
-			highlight-current-row
-			@current-change="handleCurrentChange"
+			:data="companies.companies"
+			v-loading="companies.dataState === 'loading'"
+			@row-click="handleCurrentChange"
 		>
 			<el-table-column
 				label="Name"
@@ -24,6 +24,7 @@
 				label="Credits remaining"
 				sortable
 			/>
+			
 		</el-table>
 		<el-dialog 
 			title="Create new company"
@@ -42,7 +43,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showAddCompanyModal = false">Cancel</el-button>
-				<el-button type="primary" @click="createCompany">Confirm</el-button>
+				<el-button type="primary" @click="createCompany(form)">Confirm</el-button>
 			</span>
 		</el-dialog>
 
@@ -52,10 +53,10 @@
 			:visible.sync="showAddUsersToCompany"
 		>
 			<el-form ref="form" :model="users">
-				<el-form-item label="Credits remaining">
+				<el-form-item label="Select user">
 					<el-select v-model="selectedUser" placeholder="Select">
 						<el-option
-							v-for="user in users.data"
+							v-for="user in filteredUsers"
 							:key="user.id"
 							:label="user.name"
 							:value="user.id" />
@@ -64,7 +65,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showAddUsersToCompany = false">Cancel</el-button>
-				<el-button type="primary" @click="addUserToCompany">Confirm</el-button>
+				<el-button type="primary" @click="addUserToCompany({ companyId: selectedCompany.id, userId: selectedUser })">Confirm</el-button>
 			</span>
 		</el-dialog>
 	</page>
@@ -72,42 +73,41 @@
 
 <script>
 import { CompaniesService, UsersService } from '@/api';
+import { mapActions, mapState } from 'vuex';
 export default {
 	name: 'Companies',
 	data() {
       return {
 		showAddCompanyModal: false,
 		form: {},
-        tableData: [],
-		multipleSelection: [],
 		showAddUsersToCompany: false,
-		service: null,
-		usersService: null,
 		selectedCompany: null,
 		selectedUser: null,
-		users: null,
+		showMore: false,
       }
 	},
+	computed: {
+		...mapState({
+			companies: state => state.companies,
+			users: state => state.users,
+		}),
+		filteredUsers() {
+			return this.users.users ? this.users.users.filter(user => !user.companies.length) : []
+		}
+	},
 	methods: {
-		async createCompany() {
-			const data = this.service.createCompany(this.form);
-			if(data.success) window.location.reload();
-		},
+		...mapActions('companies', ['fetchCompanies', 'createCompany', 'addUserToCompany']),
+		...mapActions('users', ['fetchUsers']),
+		
 		handleCurrentChange(data) {
 			this.showAddUsersToCompany = true;
 			this.selectedCompany = data;
 			console.log(data);
 		},
-		async addUserToCompany() {
-			const data = await this.usersService.addUserToCompany({ companyId: this.selectedCompany.id, userId: this.selectedUser });
-			console.log(data);
-		}
 	},
 	async mounted() {
-		this.service = new CompaniesService;
-		this.tableData = await this.service.getCompanies();
-		this.usersService = new UsersService;
-		this.users = await this.usersService.getUsers();
+		this.fetchCompanies();
+		this.fetchUsers();
 	}
 }
 </script>

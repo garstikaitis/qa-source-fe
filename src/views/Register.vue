@@ -51,6 +51,7 @@ export default {
       const { data, success } = await authService.register({ email: this.form.email, password: this.form.password });
       if(data.success) {
         this.$store.commit('auth/SET_USER', { key: 'user', value: JSON.parse(JSON.stringify(data.data)) });
+        window.localStorage.setItem('user', JSON.stringify(data.data));
         this.$router.push({ name: 'Dashboard' });
       }
     }
