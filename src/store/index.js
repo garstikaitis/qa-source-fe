@@ -18,7 +18,6 @@ export default new Vuex.Store({
     createPersistedState({
       paths: [
         "auth.user",
-        "auth.token"
       ]
     })
   ]

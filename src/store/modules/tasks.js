@@ -64,7 +64,7 @@ const actions = {
 				type: 'error'
 			});
 		}
-	}
+	},
 };
 const mutations = {
 	SET_TASKS(state, { key, value }) {

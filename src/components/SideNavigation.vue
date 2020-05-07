@@ -1,5 +1,6 @@
 <template>
-	<div class="fixed top-0 left-0 bg-white flex flex-col p-3 pt-20 h-screen shadow">
+	<div class="fixed top-0 left-0 bg-white flex flex-col p-3 h-screen shadow">
+		<img :src="require('../assets/logo.png')" style="width: 40px;" class="mb-12 mt-2" />
 		<router-link :to="{ name: 'Dashboard' }">
 			<div class="mb-6 relative">
 				<div v-if="$route.name === 'Dashboard'" class="activeIndicator"></div>

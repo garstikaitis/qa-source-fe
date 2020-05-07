@@ -37,6 +37,15 @@
 				<el-form-item label="Client title">
 					<el-input v-model="form.name"></el-input>
 				</el-form-item>
+				<el-form-item label="Task type">
+					<el-select v-model="form.type" placeholder="Select">
+						<el-option
+							v-for="(type, index) in types"
+							:key="index"
+							:label="type"
+							:value="type" />
+					</el-select>
+				</el-form-item>
 				<el-form-item label="Task description">
 					<el-input type="textarea" :rows="6" v-model="form.description"></el-input>
 				</el-form-item>
@@ -48,7 +57,7 @@
 						value-format="yyyy-MM-dd HH:mm:ss"
 					/>
 				</el-form-item>
-				<el-form-item label="Select company">
+				<el-form-item v-if="auth.user.role === 'admin'" label="Select company">
 					<el-select v-model="form.companyId" placeholder="Select">
 						<el-option
 							v-for="company in companies.companies"
@@ -60,7 +69,7 @@
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showAddTaskModal = false">Cancel</el-button>
-				<el-button type="primary" @click="createTask(form)">Confirm</el-button>
+				<el-button type="primary" @click="handleCreateTask">Confirm</el-button>
 			</span>
 		</el-dialog>
 
@@ -100,23 +109,35 @@ export default {
 			assignForm: {},
 			selectedTask: null,
 			showAssignTesterModal: false,
+			types: ['Alpha testing','Acceptance testing','Ad-hoc testing','Accessibility testing','Beta testing','Browser compatibility testing','Backward compatibility testing','Boundary value testing','Usability testing']
 		}
 	},
 	computed: {
 		...mapState({
 			tasks: state => state.tasks,
 			companies: state => state.companies,
+			auth: state => state.auth,
 		}),
-		...mapGetters('users', ['usersExcludingAdmins'])
+		...mapGetters('users', ['usersExcludingAdmins']),
+		...mapGetters('auth', ['user']),
 	},
 	methods: {
-		...mapActions('tasks', ['fetchTasks', 'createTask', 'assignTaskToUser']),
+		...mapActions('tasks', ['fetchTasks', 'createTask', 'assignTaskToUser', 'applyToTask']),
 		...mapActions('companies', ['fetchCompanies']),
 		...mapActions('users', ['fetchUsers']),
 		handleShowAssignUserModal(task) {
-			this.selectedTask = task;
-			this.showAssignTesterModal = true;
+			if(this.auth.user.role === 'tester') {
+				console.log('here');
+				this.assignTaskToUser({ userId: this.auth.user.id, taskId: task.id });
+			} else {
+				this.selectedTask = task;
+				this.showAssignTesterModal = true;
+			}
 		},
+		handleCreateTask() {
+			if(this.auth.user.role === 'client') this.form.companyId = this.user.company.id;
+			this.createTask(this.form);
+		}
 	},
 	async mounted() {
 		this.fetchTasks();

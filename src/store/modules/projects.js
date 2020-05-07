@@ -29,6 +29,22 @@ const actions = {
 			});
 		}
 	},
+	async returnProject({ commit }, formData) {
+		try {
+			const { success } = await projectsService.returnProject(formData);
+			if(success) {
+				window.location.reload();
+			} else {
+				throw new Exception('Error fetching projects')
+			}
+		} catch(e) {
+			Notification({
+				title: 'Error',
+				message: 'Error returning project',
+				type: 'error'
+			});
+		}
+	}
 };
 const mutations = {
 	SET_PROJECTS(state, { key, value }) {

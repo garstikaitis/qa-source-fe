@@ -6,6 +6,10 @@ class ProjectsService {
 		const { data } = await axios.get('/projects');
 		return data;
 	}
+	async returnProject(formData) {
+		const { data } = await axios.post('/projects/return', formData);
+		return data;
+	}
 }
 
 export default ProjectsService;

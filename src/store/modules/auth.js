@@ -8,14 +8,17 @@ const state = {
 	user: window.localStorage.getItem('user') || null,
 	token: null,
 };
-const getters = {};
+const getters = {
+	user: state => state.user ? { ...state.user, company: state.user.companies.length ? state.user.companies[0] : null } : null,
+};
 const actions = {
 	async logout({ commit }) {
 		try {
 			const success = await authService.logout();
 			if(success) {
-				router.push({ name: 'Login' });
+				commit('SET_USER', { key: 'user', value: null });
 				window.localStorage.removeItem('user');
+				router.push({ name: 'Login' });
 			} else {
 				throw new Exception('Error logging out')
 			}
