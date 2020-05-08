@@ -7,8 +7,6 @@ import router from '@/router';
 axios.defaults.baseURL = 'http://qa-source.test/api/';
 axios.defaults.headers.common.Authorization = `Bearer ${Cookies.get('authToken')}`;
 
-console.log('here')
-
 // Add a response interceptor
 axios.interceptors.response.use(function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger

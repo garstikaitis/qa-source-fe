@@ -102,7 +102,6 @@ export default {
 		handleCurrentChange(data) {
 			this.showAddUsersToCompany = true;
 			this.selectedCompany = data;
-			console.log(data);
 		},
 	},
 	async mounted() {

@@ -20,15 +20,14 @@ const actions = {
 				commit('SET_COMPANIES', { key: 'dataState', value: dataState.SUCCESS })
 			} else {
 				commit('SET_COMPANIES', { key: 'dataState', value: dataState.ERROR })
-				// throw new Exception('Error fetching companies')
+				throw new Exception('Error fetching companies')
 			}
 		} catch(e) {
-			console.log(e);
-			// Notification({
-			// 	title: 'Error',
-			// 	message: 'Error fetching companies',
-			// 	type: 'error'
-			// });
+			Notification({
+				title: 'Error',
+				message: 'Error fetching companies',
+				type: 'error'
+			});
 		}
 	},
 	async addUserToCompany({ commit }, { companyId, userId }) {

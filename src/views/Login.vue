@@ -52,7 +52,11 @@ export default {
       if(data.success) {
         this.$store.commit('auth/SET_USER', { key: 'user', value: JSON.parse(JSON.stringify(data.data)) });
         window.localStorage.setItem('user', JSON.stringify(data.data));
-        this.$router.push({ name: 'Dashboard' });
+        let redirectRoute = null;
+        if(data.data.role === 'client') redirectRoute = 'ClientDashboard';
+        if(data.data.role === 'tester') redirectRoute = 'TesterDashboard';
+        if(data.data.role === 'admin') redirectRoute = 'Dashboard';
+        this.$router.push({ name: redirectRoute });
       }
     }
   },

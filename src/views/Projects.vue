@@ -91,8 +91,7 @@ export default {
 			const file = this.$refs.upload.uploadFiles[0];
 			const fd = new FormData();
 			fd.append('projectId', this.selectedProject.id);
-			if(this.auth.user.role === 'admin') fd.append('userId', this.selectedProject.userId);
-			else fd.append('userId', this.auth.user.id);
+			fd.append('userId', this.selectedProject.userId);
 			fd.append('file', file.raw);
 			this.returnProject(fd);
 		}
