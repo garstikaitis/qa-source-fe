@@ -65,6 +65,27 @@ const actions = {
 			});
 		}
 	},
+	async fetchTask({ commit }, taskId) {
+		commit('SET_TASKS', { key: 'dataState', value: dataState.LOADING })
+		try {
+			const { success, data } = await tasksService.getTask(taskId);
+			console.log(success, data);
+			if(success) {
+				commit('SET_TASKS', { key: 'tasks', value: data });
+				commit('SET_TASKS', { key: 'dataState', value: dataState.SUCCESS });
+			} else {
+				commit('SET_TASKS', { key: 'dataState', value: dataState.ERROR })
+				throw new Exception('Error creating task')
+			}
+		} catch(e) {
+			console.log(e);
+			Notification({
+				title: 'Error',
+				message: 'Error fetching task',
+				type: 'error'
+			});
+		}
+	},
 };
 const mutations = {
 	SET_TASKS(state, { key, value }) {

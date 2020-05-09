@@ -6,6 +6,10 @@ class TasksService {
 		const { data } = await axios.get('/tasks');
 		return data;
 	}
+	async getTask(taskId) {
+		const { data } = await axios.post('/tasks', { taskId });
+		return data;
+	}
 	async createTask(input) {
 		const { data } = await axios.post('/tasks/create', { ...input });
 		return data;

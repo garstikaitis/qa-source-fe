@@ -9,18 +9,18 @@ import Dropzone from 'vue2-dropzone';
 import './assets/theme/index.css';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import loadComponents from './utils/register-components';
-import VueCompositionApi from '@vue/composition-api';
+import Skeleton from 'vue-loading-skeleton';
 
 
 loadComponents();
 
 Vue.component('draggable', draggable);
 Vue.component('dropzone', Dropzone);
+Vue.component('skeleton', Skeleton);
 
 Vue.config.productionTip = false
 Vue.use(Element, { locale });
 Vue.use(require('vue-moment'));
-Vue.use(VueCompositionApi);
 
 new Vue({
   router,

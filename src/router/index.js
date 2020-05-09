@@ -11,6 +11,7 @@ import Tasks from '@/views/Tasks.vue';
 import TesterProjects from '@/views/TesterProjects.vue'
 import TesterDashboard from '@/views/TesterDashboard.vue'
 import TesterTasks from '@/views/TesterTasks.vue'
+import TesterTask from '@/views/TesterTask.vue'
 import ClientProjects from '@/views/ClientProjects.vue'
 import ClientDashboard from '@/views/ClientDashboard.vue'
 import ClientTasks from '@/views/ClientTasks.vue'
@@ -20,7 +21,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login
   },
@@ -62,12 +63,20 @@ const routes = [
     }
   },
   {
+    path: '/tester/tasks/:taskId',
+    name: 'TesterTask',
+    component: TesterTask,
+    meta: {
+      allowedRole: 'tester'
+    }
+  },
+  {
     path: '/client/projects',
     name: 'ClientProjects',
     component: ClientProjects,
     meta: {
       allowedRole: 'client'
-    }
+    },
   },
   {
     path: '/client/dashboard',
@@ -122,20 +131,23 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeResolve((routeTo, routeFrom, next) => {
+router.beforeEach((routeTo, routeFrom, next) => {
   const allowedRole = routeTo.matched.length ? routeTo.matched[0].meta.allowedRole : null;
   const user = store.getters["auth/user"];
-
-  if(!user) next({ name: "Login" });
-  else if(user.role !== allowedRole) {
+  console.log(user);
+  if(!user && routeTo.path !== '/login') {
+    next({ name: 'Login' });
+  } else if(user && user.role !== allowedRole) {
+    console.log('here else if');
     Notification({
       title: 'Access denied',
       type: 'error',
-      message: 'You don\t have access to this page. Aborting'
+      message: 'You don\'t have access to this page. Aborting',
     });
-    next({ name: routeFrom.name }); 
+    next(false); 
+  } else {
+    next();
   }
-  else next();
 });
 
 
