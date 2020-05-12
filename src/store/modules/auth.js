@@ -1,12 +1,14 @@
 import { Notification } from 'element-ui';
-import { AuthService } from '../../api';
+import { AuthService, UsersService } from '../../api';
 import router from '@/router';
 
 const authService = new AuthService;
+const usersService = new UsersService;
 
 const state = {
 	user: window.localStorage.getItem('user') || null,
 	token: null,
+	userMeta: null,
 };
 const getters = {
 	user: state => state.user ? { ...state.user, company: state.user.companies.length ? state.user.companies[0] : null } : null,
@@ -27,6 +29,20 @@ const actions = {
 				type: 'error',
 				title: 'Error',
 				message: 'Error logging out'
+			})
+		}
+	},
+	async fetchMe({ commit }) {
+		try {
+			const { data, success } = await usersService.getMe();
+			if(success) commit('SET_USER', { key: 'userMeta', value: data });
+			else throw new Exception('Error fetching user data');
+		} catch(e) {
+			console.log(e);
+			Notification({
+				type: 'error',
+				title: 'Error',
+				message: 'Error fetching user data'
 			})
 		}
 	}

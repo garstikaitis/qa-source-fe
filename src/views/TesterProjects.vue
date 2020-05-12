@@ -23,7 +23,8 @@
 					<div class="flex w-full justify-between items-center">
 						
 						<div>Created by: {{ project.task.company.name }}</div>
-						<el-button type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
+						<el-button v-if="activeTab === 'ongoing'" type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
+						<el-button v-else type="primary" @click="handleShowRatingModal(project)">Rate</el-button>
 					</div>
 				</div>
 			</div>
@@ -53,6 +54,24 @@
 				<el-button type="primary" @click="handleSubmit">Confirm</el-button>
 			</span>
 		</el-dialog>
+		<el-dialog 
+			v-if="selectedProject"
+			:title="`Rate project`"
+			:visible.sync="showRatingModal"
+		>
+			<el-form ref="form" :model="rateForm">
+				<el-form-item label="Rate from 1 to 5 where 5 is the highest">
+					<el-rate v-model="rateForm.rating"></el-rate>
+				</el-form-item>
+				<el-form-item label="Comment" class="flex flex-col items-center justify-center">
+					<el-input type="textarea" v-model="rateForm.comment" />
+				</el-form-item>
+			</el-form>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="showRatingModal = false">Cancel</el-button>
+				<el-button type="primary" @click="handleRateTask">Confirm</el-button>
+			</span>
+		</el-dialog>
 	</page>
 </template>
 
@@ -69,10 +88,12 @@ export default {
 			returnForm: {
 				files: []
 			},
+			showRatingModal: false,
 			options: {
 				url: 'https://httpbin.org/post',
 				autoProcessQueue: false
-			}
+			},
+			rateForm: {}
 		}
 	},
 	computed: {
@@ -90,6 +111,7 @@ export default {
 	},
 	methods: {
 		...mapActions('projects', ['fetchProjects', 'returnProject']),
+		...mapActions('tasks', ['rateTask']),
 		handleSubmit() {
 			const file = this.$refs.upload.uploadFiles[0];
 			const fd = new FormData();
@@ -103,6 +125,20 @@ export default {
 			this.selectedProject = project;
 			this.showProjectReturnModal = true;
 		},
+		handleShowRatingModal(project) {
+			this.selectedProject = project;
+			this.showRatingModal = true;
+		},
+		handleRateTask() {
+			const input = {
+				rating: this.rateForm.rating,
+				comment: this.rateForm.comment,
+				created_by: this.auth.user.id,
+				given_to: 2, // TODO UPDATE
+				taskId: this.selectedProject.task.id,
+			}
+			this.rateTask(input);
+		}
 	},
 	mounted() {
 		this.fetchProjects();

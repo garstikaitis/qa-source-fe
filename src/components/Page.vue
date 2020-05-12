@@ -4,7 +4,8 @@
 		<side-navigation />
 		<div class="bg-gray-100 min-h-screen pt-20 pl-20 pr-5">
 			<div class="w-full justify-between flex items-center mb-5 mt-4">
-				<h1 class="font-bold text-gray-800 text-2xl font-body">{{ title }}</h1>
+				<slot v-if="!!$slots.title" name="title"></slot>
+				<h1 class="font-bold text-gray-800 text-2xl font-body" v-else>{{ title }}</h1>
 				<slot name="top-button"></slot>
 			</div>
 			<slot></slot>

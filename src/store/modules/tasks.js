@@ -29,18 +29,21 @@ const actions = {
 			});
 		}
 	},
-	async createTask({ commit }, form) {
+	async createTask({ commit, state }, form) {
 		commit('SET_TASKS', { key: 'dataState', value: dataState.LOADING })
 		try {
 			const { data, success } = await tasksService.createTask(form);
 			if(success) {
-				commit('SET_TASKS', { key: 'tasks', value: [...data.tasks, data] });
+				let tasks = state.tasks;
+				tasks.push(data);
+				commit('SET_TASKS', { key: 'tasks', value: tasks });
 				commit('SET_TASKS', { key: 'dataState', value: dataState.SUCCESS })
 			} else {
 				commit('SET_TASKS', { key: 'dataState', value: dataState.ERROR })
 				throw new Exception('Error creating task')
 			}
 		} catch(e) {
+			console.log(e);
 			Notification({
 				title: 'Error',
 				message: 'Error creating task',
@@ -61,6 +64,23 @@ const actions = {
 			Notification({
 				title: 'Error',
 				message: 'Error creating task',
+				type: 'error'
+			});
+		}
+	},
+	async rateTask({ commit }, input) {
+		commit('SET_TASKS', { key: 'dataState', value: dataState.LOADING });
+		try {
+			const { success } = await tasksService.rateTask(input);
+			if(success) {
+				window.location.reload();
+			} else {
+				throw new Exception('Error rating task')
+			}
+		} catch(e) {
+			Notification({
+				title: 'Error',
+				message: 'Error rating task',
 				type: 'error'
 			});
 		}

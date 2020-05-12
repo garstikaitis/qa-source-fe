@@ -134,11 +134,10 @@ const router = new VueRouter({
 router.beforeEach((routeTo, routeFrom, next) => {
   const allowedRole = routeTo.matched.length ? routeTo.matched[0].meta.allowedRole : null;
   const user = store.getters["auth/user"];
-  console.log(user);
-  if(!user && routeTo.path !== '/login') {
+  if(!allowedRole) next();
+  else if(!user && routeTo.path !== '/login') {
     next({ name: 'Login' });
   } else if(user && user.role !== allowedRole) {
-    console.log('here else if');
     Notification({
       title: 'Access denied',
       type: 'error',

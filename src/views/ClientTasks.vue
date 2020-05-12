@@ -41,7 +41,7 @@
 						<el-option
 							v-for="(type, index) in types"
 							:key="index"
-							:label="type"
+							:label="`${type} testing`"
 							:value="type" />
 					</el-select>
 				</el-form-item>
@@ -56,15 +56,16 @@
 						value-format="yyyy-MM-dd HH:mm:ss"
 					/>
 				</el-form-item>
-				<el-form-item v-if="auth.user.role === 'admin'" label="Select company">
-					<el-select v-model="form.companyId" placeholder="Select">
-						<el-option
-							v-for="company in companies.companies"
-							:key="company.id"
-							:label="company.name"
-							:value="company.id" />
-					</el-select>
-				</el-form-item>
+				<el-upload 
+					id="dropzone" 
+					ref="upload"
+					action="https://jsonplaceholder.typicode.com/posts/"
+					:auto-upload="false"
+					:drag="true"
+				>
+					<i class="el-icon-upload"></i>
+					<div class="el-upload__text">Drop file here or <em>click to upload</em></div>
+				</el-upload>
 			</el-form>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="showAddTaskModal = false">Cancel</el-button>
@@ -83,7 +84,7 @@ export default {
 		return {
 			showAddTaskModal: false,
 			form: {},
-			types: ['Alpha testing','Acceptance testing','Ad-hoc testing','Accessibility testing','Beta testing','Browser compatibility testing','Backward compatibility testing','Boundary value testing','Usability testing']
+			types: ['Alpha','Acceptance','Ad-hoc','Accessibility','Beta','Browser compatibility','Backward compatibility','Boundary value','Usability']
 		}
 	},
 	computed: {
@@ -96,8 +97,15 @@ export default {
 	methods: {
 		...mapActions('tasks', ['fetchTasks', 'createTask']),
 		handleCreateTask() {
-			this.form.companyId = this.user.company.id;
-			this.createTask(this.form);
+			const file = this.$refs.upload.uploadFiles[0];
+			const fd = new FormData();
+			fd.append('name', this.form.name);
+			fd.append('companyId', this.user.company.id);
+			fd.append('description', this.form.description);
+			fd.append('type', this.form.type);
+			fd.append('deadline', this.form.deadline);
+			fd.append('file', file.raw);
+			this.createTask(fd);
 		}
 	},
 	async mounted() {

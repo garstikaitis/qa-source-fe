@@ -11,11 +11,15 @@ class TasksService {
 		return data;
 	}
 	async createTask(input) {
-		const { data } = await axios.post('/tasks/create', { ...input });
+		const { data } = await axios.post('/tasks/create', input);
 		return data;
 	}
 	async assignTaskToUser({ taskId, userId }) {
 		const { data } = await axios.post('/projects/take', { taskId, userId });
+		return data;
+	}
+	async rateTask(input) {
+		const { data } = await axios.post('/tasks/rate', { ...input });
 		return data;
 	}
 }
