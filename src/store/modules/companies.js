@@ -45,7 +45,12 @@ const actions = {
 	},
 	async createCompany({ commit, state }, form) {
 		try {
-			const { data, success } = await companiesService.createCompany({ ...form });
+			const logo = await axios.get(`https://autocomplete.clearbit.com/v1/companies/suggest?query=${form.name}`);
+			const input = {
+				...form,
+				logo: logo.data.length ? logo.data[0].logo : 'https://d1nhio0ox7pgb.cloudfront.net/_img/g_collection_png/standard/128x128/fire.png'
+			};
+			const { data, success } = await companiesService.createCompany({ ...input });
 			if(success) { 
 				commit('SET_COMPANIES', { key: 'companies', value: [...state.companies, data] }) 
 			}

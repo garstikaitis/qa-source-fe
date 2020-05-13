@@ -11,6 +11,7 @@ import Tasks from '@/views/Tasks.vue';
 import TesterProjects from '@/views/TesterProjects.vue'
 import TesterDashboard from '@/views/TesterDashboard.vue'
 import TesterTasks from '@/views/TesterTasks.vue'
+import TesterRatings from '@/views/TesterRatings.vue'
 import TesterTask from '@/views/TesterTask.vue'
 import ClientProjects from '@/views/ClientProjects.vue'
 import ClientDashboard from '@/views/ClientDashboard.vue'
@@ -58,6 +59,14 @@ const routes = [
     path: '/tester/tasks',
     name: 'TesterTasks',
     component: TesterTasks,
+    meta: {
+      allowedRole: 'tester'
+    }
+  },
+  {
+    path: '/tester/ratings',
+    name: 'TesterRatings',
+    component: TesterRatings,
     meta: {
       allowedRole: 'tester'
     }

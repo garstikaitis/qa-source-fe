@@ -52,6 +52,12 @@
 					<i class="el-icon-edit text-4xl"  :class="{ activeIcon: $route.name === 'TesterTasks' || $route.name === 'TesterTask' }"></i>
 				</div>
 			</router-link>
+			<router-link :to="{ name: 'TesterRatings' }">
+				<div class="mb-6 relative">
+					<div v-if="$route.name === 'TesterRatings' || $route.name === 'TesterRatings'" class="activeIndicator"></div>
+					<i class="el-icon-star-off text-4xl"  :class="{ activeIcon: $route.name === 'TesterRatings' || $route.name === 'TesterRatings' }"></i>
+				</div>
+			</router-link>
 		</div>
 		<div v-if="auth.user.role === 'client'">
 			<router-link :to="{ name: 'ClientDashboard' }">

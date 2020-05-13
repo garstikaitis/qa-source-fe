@@ -8,7 +8,7 @@ class UsersService {
 	}
 
 	async getMe() {
-		const { data } = await axios.get('/me');
+		const { data } = await axios.get('/users/me');
 		return data;
 	}
 }

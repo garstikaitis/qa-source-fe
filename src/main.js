@@ -10,7 +10,7 @@ import './assets/theme/index.css';
 import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 import loadComponents from './utils/register-components';
 import Skeleton from 'vue-loading-skeleton';
-
+import Trend from 'vuetrend';
 
 loadComponents();
 
@@ -21,6 +21,7 @@ Vue.component('skeleton', Skeleton);
 Vue.config.productionTip = false
 Vue.use(Element, { locale });
 Vue.use(require('vue-moment'));
+Vue.use(Trend);
 
 new Vue({
   router,
