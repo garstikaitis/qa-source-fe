@@ -9,6 +9,7 @@ import Companies from '@/views/Companies.vue';
 import Register from '@/views/Register.vue';
 import Tasks from '@/views/Tasks.vue';
 import TesterProjects from '@/views/TesterProjects.vue'
+import TesterProject from '@/views/TesterProject.vue'
 import TesterDashboard from '@/views/TesterDashboard.vue'
 import TesterTasks from '@/views/TesterTasks.vue'
 import TesterRatings from '@/views/TesterRatings.vue'
@@ -43,6 +44,14 @@ const routes = [
     path: '/tester/projects',
     name: 'TesterProjects',
     component: TesterProjects,
+    meta: {
+      allowedRole: 'tester'
+    }
+  },
+  {
+    path: '/tester/projects/:projectId',
+    name: 'TesterProject',
+    component: TesterProject,
     meta: {
       allowedRole: 'tester'
     }

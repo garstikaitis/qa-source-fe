@@ -42,8 +42,8 @@
 			</router-link>
 			<router-link :to="{ name: 'TesterProjects' }">
 				<div class="mb-6 relative">
-					<div v-if="$route.name === 'TesterProjects'" class="activeIndicator"></div>
-					<i class="el-icon-picture-outline-round text-4xl"  :class="{ activeIcon: $route.name === 'TesterProjects' }"></i>
+					<div v-if="$route.name === 'TesterProjects' || $route.name === 'TesterProject'" class="activeIndicator"></div>
+					<i class="el-icon-picture-outline-round text-4xl"  :class="{ activeIcon: $route.name === 'TesterProjects' || $route.name === 'TesterProject' }"></i>
 				</div>
 			</router-link>
 			<router-link :to="{ name: 'TesterTasks' }">

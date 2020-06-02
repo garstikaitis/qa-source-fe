@@ -29,6 +29,25 @@ const actions = {
 			});
 		}
 	},
+	async fetchProject({ commit }, id) {
+		commit('SET_PROJECTS', { key: 'dataState', value: dataState.LOADING })
+		try {
+			const { data, success } = await projectsService.getProject(id);
+			if(success) {
+				commit('SET_PROJECTS', { key: 'projects', value: data });
+				commit('SET_PROJECTS', { key: 'dataState', value: dataState.SUCCESS })
+			} else {
+				commit('SET_PROJECTS', { key: 'dataState', value: dataState.ERROR })
+				throw new Exception('Error fetching project')
+			}
+		} catch(e) {
+			Notification({
+				title: 'Error',
+				message: 'Error fetching project',
+				type: 'error'
+			});
+		}
+	},
 	async returnProject({ commit }, formData) {
 		try {
 			const { success } = await projectsService.returnProject(formData);

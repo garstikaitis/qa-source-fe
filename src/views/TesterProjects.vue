@@ -7,25 +7,29 @@
 		<div class="flex">
 			<div class="w-3/4" v-if="activeTab === 'ongoing'" v-loading="projects.dataState === 'loading'">
 				<div class="px-4 py-2 bg-white rounded-lg shadow mb-4" v-for="project in ongoingProjects" :key="project.id">
-					<div class="font-bold font-body text-blue-500">{{ project.task.name }}<el-tag effect="plain" class="ml-2" type="info">{{ project.task.type }}</el-tag></div>
-					<div>{{ project.task.description }}</div>
-					<div class="flex w-full justify-between items-center">
-						
-						<div>Created by: {{ project.task.company.name }}</div>
-						<el-button type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
-					</div>
+					<router-link :to="{ name: 'TesterProject', params: { projectId: project.id } }">
+						<div class="font-bold font-body text-blue-500">{{ project.task.name }}<el-tag effect="plain" class="ml-2" type="info">{{ project.task.type }}</el-tag></div>
+						<div>{{ project.task.description }}</div>
+						<div class="flex w-full justify-between items-center">
+							
+							<div>Created by: {{ project.task.company.name }}</div>
+							<el-button type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
+						</div>
+					</router-link>
 				</div>
 			</div>
 			<div class="w-3/4" v-else>
 				<div class="px-4 py-2 bg-white rounded-lg shadow mb-4" v-for="project in finishedProjects" :key="project.id">
-					<div class="font-bold font-body text-blue-500">{{ project.task.name }}<el-tag effect="plain" class="ml-2" type="info">{{ project.task.type }}</el-tag></div>
-					<div>{{ project.task.description }}</div>
-					<div class="flex w-full justify-between items-center">
-						
-						<div>Created by: {{ project.task.company.name }}</div>
-						<el-button v-if="activeTab === 'ongoing'" type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
-						<el-button v-else type="primary" @click="handleShowRatingModal(project)">Rate</el-button>
-					</div>
+					<router-link :to="{ name: 'TesterProject', params: { projectId: project.id } }">
+						<div class="font-bold font-body text-blue-500">{{ project.task.name }}<el-tag effect="plain" class="ml-2" type="info">{{ project.task.type }}</el-tag></div>
+						<div>{{ project.task.description }}</div>
+						<div class="flex w-full justify-between items-center">
+							
+							<div>Created by: {{ project.task.company.name }}</div>
+							<el-button v-if="activeTab === 'ongoing'" type="primary" @click="handleShowProjectReturnModal(project)">Return</el-button>
+							<el-button v-else type="primary" @click="handleShowRatingModal(project)">Rate</el-button>
+						</div>
+					</router-link>
 				</div>
 			</div>
 			<my-profile />
