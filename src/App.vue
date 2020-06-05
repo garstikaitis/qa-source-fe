@@ -12,6 +12,10 @@
 $--color-primary: #6C63FF;
 $--color-secondary: #6BC83D;
 
+.w-min-content {
+  width: min-content;
+}
+
 #nav {
   padding: 30px;
 
