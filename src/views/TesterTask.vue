@@ -12,7 +12,7 @@
 							<div class="text-gray-500 text-sm">Posted {{ postedAt }} ago</div>
 						</div>
 						<div>
-							<el-button type="primary" @click="assignTaskToUser({ userId: auth.user.id, taskId: tasks.tasks.id })">Apply</el-button>
+							<el-button type="primary" @click="applyToTask({ userId: auth.user.id, taskId: tasks.tasks.id })">Apply</el-button>
 						</div>
 					</div>
 					<el-divider />
@@ -67,7 +67,7 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('tasks', ['fetchTask']),
+		...mapActions('tasks', ['fetchTask', 'applyToTask']),
 	},
 	async mounted() {
 		this.fetchTask(this.$route.params.taskId);

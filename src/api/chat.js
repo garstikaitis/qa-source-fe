@@ -2,8 +2,11 @@ import '@/utils/axios';
 import axios from 'axios';
 
 class ChatService {
-	async startChat() {
-		const { data } = await axios.post('/chat');
+	async startChat({ clientId, taskId }) {
+		const { data } = await axios.post('/chat', {
+			clientId,
+			taskId
+		});
 		return data;
 	}
 	async generateChatToken(email) {

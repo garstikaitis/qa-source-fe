@@ -122,7 +122,7 @@ export default {
 		...mapGetters('auth', ['user']),
 	},
 	methods: {
-		...mapActions('tasks', ['fetchTasks', 'createTask', 'assignTaskToUser', 'applyToTask']),
+		...mapActions('tasks', ['fetchTasks', 'createTask', 'applyToTask']),
 		...mapActions('companies', ['fetchCompanies']),
 		...mapActions('users', ['fetchUsers']),
 		handleShowAssignUserModal(task) {

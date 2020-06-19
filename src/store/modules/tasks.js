@@ -51,21 +51,24 @@ const actions = {
 			});
 		}
 	},
-	async assignTaskToUser({ commit }, { userId, taskId }) {
-		commit('SET_TASKS', { key: 'dataState', value: dataState.LOADING })
-		try {
-			const { success } = await tasksService.assignTaskToUser({ userId, taskId });
-			if(success) {
-				window.location.reload();
-			} else {
-				throw new Exception('Error creating task')
+	async applyToTask({ commit, dispatch, state }, { userId, taskId }) {
+		const chatStarted = await dispatch('chat/startChat', { taskId: state.tasks.id, clientId: state.tasks.client_id }, { root: true }); 
+		if(chatStarted.success) {
+			commit('SET_TASKS', { key: 'dataState', value: dataState.LOADING })
+			try {
+				const { success } = await tasksService.assignTaskToUser({ userId, taskId });
+				if(success) {
+					window.location.reload();
+				} else {
+					throw new Exception('Error creating task')
+				}
+			} catch(e) {
+				Notification({
+					title: 'Error',
+					message: 'Error creating task',
+					type: 'error'
+				});
 			}
-		} catch(e) {
-			Notification({
-				title: 'Error',
-				message: 'Error creating task',
-				type: 'error'
-			});
 		}
 	},
 	async rateTask({ commit }, input) {

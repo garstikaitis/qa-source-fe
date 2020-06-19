@@ -11,28 +11,32 @@ const state = {
 	token: null,
 	chatWindow: null,
 	client: null,
-	selectedChannel: null,
+	channel: null,
 };
 const getters = {};
 const actions = {
-	async startChat({ commit }) {
-		commit('SET_CHAT', { key: 'dataState', value: dataState.LOADING })
-		try {
-			const { data, success } = await chatService.startChat();
-			if(success) {
-				commit('SET_CHAT', { key: 'chat', value: data });
-				commit('SET_CHAT', { key: 'dataState', value: dataState.SUCCESS })
-			} else {
-				commit('SET_CHAT', { key: 'dataState', value: dataState.ERROR })
-				throw new Exception('Error starting chat')
+	async startChat({ commit }, { taskId, clientId }) {
+		return new Promise(async (resolve, reject) => {
+			commit('SET_CHAT', { key: 'dataState', value: dataState.LOADING })
+			try {
+				const { data, success } = await chatService.startChat({ taskId, clientId });
+				if(success) {
+					commit('SET_CHAT', { key: 'chat', value: data });
+					commit('SET_CHAT', { key: 'dataState', value: dataState.SUCCESS })
+					resolve({ success: true, data });
+				} else {
+					commit('SET_CHAT', { key: 'dataState', value: dataState.ERROR })
+					throw new Exception('Error starting chat')
+				}
+			} catch(e) {
+				reject('Error creating chat');
+				Notification({
+					title: 'Error',
+					message: 'Error starting chat',
+					type: 'error'
+				});
 			}
-		} catch(e) {
-			Notification({
-				title: 'Error',
-				message: 'Error starting chat',
-				type: 'error'
-			});
-		}
+		})
 	},
 	async initChat({ commit, dispatch }, email) {
 		commit('SET_CHAT', { key: 'dataState', value: dataState.LOADING })
@@ -78,15 +82,17 @@ const actions = {
 	sendMessage({ commit, state }, message) {
 		state.channel.sendMessage(message);
 	},
-	async getChannel({ commit, dispatch, state }, client) {
+	async getChannel({ commit, dispatch, state, rootState }, client) {
 		try {
-			const data = await client.getChannelByUniqueName(`test`);
+			const channelName = `${rootState.auth.user.id}-${rootState.projects.projects.task.client_id}-${rootState.projects.projects.task.id}`;
+			const data = await client.getChannelByUniqueName(channelName);
 			commit('SET_CHAT', { key: 'channel', value: data });
 			dispatch('getMessages', data);
 			state.channel.on("messageAdded", message => {
 				state.chatWindow.items.push(message);
 			});
 		} catch(e) {
+			console.log(e);
 			Notification({
 				title: 'Error',
 				message: 'Error getting channel',
@@ -98,6 +104,14 @@ const actions = {
 const mutations = {
 	SET_CHAT(state, { key, value }) {
 		state[key] = value;
+	},
+	RESET_CHAT(state) {
+		state.chat = null;
+		state.dataState = dataState.LOADING,
+		state.token = null;
+		state.chatWindow = null;
+		state.client = null;
+		state.channel = null;
 	}
 };
 

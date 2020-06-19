@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 import { ChatService } from '@/api';
 export default {
 	name: 'TesterProject',
@@ -100,9 +100,15 @@ export default {
 	methods: {
 		...mapActions('projects', ['fetchProject']),
 		...mapActions('chat', ['startChat', 'generateChatToken', 'initChat', 'sendMessage']),
+		...mapMutations({ 'RESET_CHAT_STATE': 'chat/RESET_CHAT' }),
 		handleSendMessage() {
 			this.sendMessage(this.message);
 		}
+	},
+	destroyed() {
+		console.log('here');
+		this.RESET_CHAT_STATE();
+		console.log(this.chat);
 	},
 	mounted() {
 		this.fetchProject(this.$route.params.projectId);
